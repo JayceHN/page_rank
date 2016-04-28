@@ -18,7 +18,7 @@ public class main{
   * Constructor for objects of class main
   */
   public static void main(String [] args){
-	  int [][] matrix = import_csv("Bott.csv",",");
+	  int [][] matrix = import_csv(args[0],",");
 	  for (int i = 0; i < matrix.length; i++) {
 		    for (int j = 0; j < matrix[0].length; j++) {
 		        System.out.print(matrix[i][j] + " ");
@@ -46,7 +46,7 @@ public class main{
 		  e.printStackTrace();
 	  }
 	  String [][] string_matrix = list.toArray(new String[list.size()][]);
-	  int [][] matrix = new int[string_matrix.length][string_matrix[0].length]; 
+	  int [][] matrix = new int[string_matrix.length][string_matrix[0].length];
 	  for (int i = 0; i < string_matrix.length; i++) {
 		for (int j = 0; j < string_matrix[0].length; j++) {
 			matrix[i][j] = Integer.parseInt(string_matrix[i][j]);
