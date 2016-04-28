@@ -19,7 +19,9 @@ public class main{
   */
   //call : java main csvfile
   public static void main(String [] args){
-	  int [][] matrix = import_csv(args[0],",");
+    //import csv file as an int matrix
+	  int [][] page_link = import_csv(args[0],",");
+    //test syso
 	  /*for (int i = 0; i < matrix.length; i++) {
 		    for (int j = 0; j < matrix[0].length; j++) {
 		        System.out.print(matrix[i][j] + " ");
@@ -27,7 +29,22 @@ public class main{
 		    System.out.print("\n");
 		}*/
 
-    
+    // determining degree vector of the matrix
+    int [] degrees = new int [page_link.length];
+    int sum = 0;
+    for (int i=0; i<page_link.length ;i++ ) {
+      for (int j=0; j<page_link.length ;j++ ) {
+        sum = sum + page_link[i][j];
+      }
+      degrees[i] = sum;
+      sum = 0;
+    }
+    //test syso
+    /*for(int x: degrees){
+      System.out.print(x+" ");
+    }
+    System.out.print("\n");*/
+
   }
 
   /**
