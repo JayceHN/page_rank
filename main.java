@@ -17,14 +17,17 @@ public class main{
   /**
   * Constructor for objects of class main
   */
+  //call : java main csvfile
   public static void main(String [] args){
 	  int [][] matrix = import_csv(args[0],",");
-	  for (int i = 0; i < matrix.length; i++) {
+	  /*for (int i = 0; i < matrix.length; i++) {
 		    for (int j = 0; j < matrix[0].length; j++) {
 		        System.out.print(matrix[i][j] + " ");
 		    }
 		    System.out.print("\n");
-		}
+		}*/
+
+    
   }
 
   /**
