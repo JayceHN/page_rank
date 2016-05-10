@@ -42,6 +42,7 @@ public class main{
       telepor_ratio = Double.parseDouble(args[1]);
     }catch(NumberFormatException e){
       System.out.println("NumberFormatException : impossible to parseDouble. " + e.getMessage() + "\n" + bad_use_msg);
+      return;
     }
     //More assertions on the ratio...
     if(telepor_ratio > 1.0 || telepor_ratio < 0.0){
