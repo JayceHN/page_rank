@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.lang.Math;
 
 /**
 *  PageRank alogorithm
@@ -17,7 +18,7 @@ public class main{
   /**
   * main method
   */
-  // IMPORT Wrong adj matrix at your own risk !
+  // IMPORT Wrong format adj matrix at your own risk !
   //call : java main 'adj_matrix' 'teleport_ratio' 'print (y/n)'
   public static void main(String [] args){
     long startTime = System.currentTimeMillis();
@@ -63,6 +64,40 @@ public class main{
     long stopTime = System.currentTimeMillis();
     System.out.println("\n Done in : " + (stopTime-startTime) + "ms !");
   }
+
+  /**
+  * An example of a method - replace this comment with your own
+  *
+  * @param  0.0 < telepor_ratio < 1.0
+  * @return     the sum of x and y
+  */
+  public static double [] compute_sore(double [][] transition, int iteration, boolean print){
+    // score vector
+    double [] score = new double [transition.length];
+    int index = 0;
+    double sum = 0.0;
+
+    // first move
+    double first = Math.random();
+
+    for (int i=0 ; i<transition[0].length ;i++ ){
+
+    }
+
+    return score;
+  }
+
+  /**
+  * An example of a method - replace this comment with your own
+  *
+  * @param  0.0 < telepor_ratio < 1.0
+  * @return     the sum of x and y
+  */
+  public static void print_scores(double [] score){
+
+    return;
+  }
+
   /**
   * An example of a method - replace this comment with your own
   *
@@ -70,17 +105,18 @@ public class main{
   * @return     the sum of x and y
   */
   public static double[][] transition(int[][] links, int[] deg, double telepor_ratio, boolean print){
+    // google matrix
     System.out.print("\n Computing : transition matrix... \n");
     double[][] prob_matrix = new double [links.length][links[0].length];
 
     //probabilty of jump : alpha/N
-    double prob = telepor_ratio/links.length;
+    double prob = 1/links.length;
 
     for(int i = 0; i<links.length; i++){       // N
       // *
       for(int j = 0; j<links[0].length; j++){  // N
 
-        //evaluating the transition probability:
+        //evaluating the transition probability (no more sparse):
         prob_matrix[i][j] =  prob + (1.0-telepor_ratio)*links[i][j]/deg[i] ;
       }
     }
