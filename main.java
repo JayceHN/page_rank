@@ -89,36 +89,40 @@ public class main{
         break;
       }
     }
-    //avoid sink nodes
-    int length = links.length;
-    for(int x: deg){
-      if(x==0){
-        length -- ;
-      }
-    }
-    //probabilty of jump : alpha/N
-    double prob = telepor_ratio/length;
+    // probabilty of jump : alpha/N
+    double prob = telepor_ratio/links.length;
     if(perso_flag==0){
       for(int i = 0; i<links.length; i++){       // N
         for(int j = 0; j<links[0].length; j++){  // N
           //avoid sink nodes
-          if(deg[i]==0){;}else{
+          if(deg[i]==0){
+            for(int k=0; k<links.length;k++){
+              links[i][k] = 1/links.length;
+            }
+            deg[i]=1;
+          }
             //evaluating the transition probability (no more sparse):
             prob_matrix[i][j] =  prob + (1.0-telepor_ratio)*links[i][j]/deg[i] ;
-          }
+
         }
       }
     }else {
       for(int i = 0; i<links.length; i++){       // N
         for(int j = 0; j<links[0].length; j++){  // N
           //avoid sink nodes
-          if(deg[i]==0){;}else{
+          //avoid sink nodes
+          if(deg[i]==0){
+            for(int k=0; k<links.length;k++){
+              links[i][k] = 1/links.length;
+            }
+            deg[i]=1;
+          }
             //evaluating the transition probability (no more sparse):
             prob_matrix[i][j] =  prob + (1.0-telepor_ratio)*links[i][j]/deg[i]*perso[i] ;
           }
         }
       }
-    }
+
 
     //******************* Code to print in a file *****************
     if(print){
@@ -175,7 +179,7 @@ public class main{
       rank = tmp;
     }
 
-
+    rank = normalize(rank);
     System.out.println("\n Score after " + iter + " iterations : \n");
     // print page ranks
     double sum = 0;
@@ -197,6 +201,22 @@ public class main{
       return false;
     }
     return true;
+  }
+
+  /**
+  * Normalize
+  */
+  public static double[] normalize(double [] rank){
+    double norm = 0 ;
+    for(double x: rank){
+      norm += x*x;
+    }
+    norm = Math.sqrt(norm);
+    double [] normalized = new double[rank.length];
+    for (int i =0; i<rank.length ;i++ ) {
+      normalized[i] = rank[i]/norm;
+    }
+    return normalized;
   }
 
   /**
