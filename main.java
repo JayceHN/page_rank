@@ -9,7 +9,7 @@ import java.lang.Math;
 
 /**
 *  PageRank alogorithm
-*
+* Inspired from [Pearson] - Algorithms, 4th ed. - [Sedgewick, Wayne]
 * @author Robin Hormaux & Guillaume Calmant
 * @version 0.9
 */
@@ -24,9 +24,9 @@ public class main{
     long startTime = System.currentTimeMillis();
     //ASSERTIONS
     //set the string returned when user use wrongly the program
-    String bad_use_msg = "call : java main 'adj_matrix.csv' 'teleport_ratio' 'print (y/n)', please open the readme.";
+    String bad_use_msg = "call : java main 'adj_matrix.csv' 'teleport_ratio' 'print (y/n)' 'perso.csv', please open the readme.";
     //verifying the nubers of args
-    if(args.length != 3){
+    if(args.length != 4){
       System.out.println(bad_use_msg);
       return;
     }
@@ -58,9 +58,15 @@ public class main{
     int [] degrees = compute_deg(page_link,print);
 
     // determining the transition matrix
-    double [][] trans = transition(page_link, degrees, 0.1, print);
-
-    markov(trans);
+    double [][] trans = new double[page_link.length][page_link[0].length];
+    double[] perso = new double[degrees.length];
+    if(args[3].equals("null")){
+      trans = transition(page_link, degrees, telepor_ratio, perso, print);
+    }else{
+      perso = import_perso(args[3],",");
+      trans = transition(page_link, degrees, telepor_ratio, perso, print);
+    }
+    power(trans);
 
     long stopTime = System.currentTimeMillis();
     System.out.println("\n Done in : " + (stopTime-startTime) + "ms !");
@@ -72,53 +78,45 @@ public class main{
   * @param  0.0 < telepor_ratio < 1.0
   * @return     the sum of x and y
   */
-  public static double [] compute_sore(double [][] transition, int iteration, boolean print){
-    // score vector
-    double [] score = new double [transition.length];
-    int index = 0;
-    double sum = 0.0;
-
-    // first move
-    double first = Math.random();
-
-    for (int i=0 ; i<transition[0].length ;i++ ){
-
-    }
-
-    return score;
-  }
-
-  /**
-  * An example of a method - replace this comment with your own
-  *
-  * @param  0.0 < telepor_ratio < 1.0
-  * @return     the sum of x and y
-  */
-  public static void print_scores(double [] score){
-
-    return;
-  }
-
-  /**
-  * An example of a method - replace this comment with your own
-  *
-  * @param  0.0 < telepor_ratio < 1.0
-  * @return     the sum of x and y
-  */
-  public static double[][] transition(int[][] links, int[] deg, double telepor_ratio, boolean print){
+  public static double[][] transition(int[][] links, int[] deg, double telepor_ratio, double[] perso, boolean print){
     // google matrix
     System.out.print("\n Computing : transition matrix... \n");
     double[][] prob_matrix = new double [links.length][links[0].length];
-
+    int perso_flag = 0;
+    for(double x: perso){
+      if(x!=0){
+        perso_flag = 1;
+        break;
+      }
+    }
+    //avoid sink nodes
+    int length = links.length;
+    for(int x: deg){
+      if(x==0){
+        length -- ;
+      }
+    }
     //probabilty of jump : alpha/N
-    double prob = telepor_ratio/links.length;
-
-    for(int i = 0; i<links.length; i++){       // N
-      // *
-      for(int j = 0; j<links[0].length; j++){  // N
-
-        //evaluating the transition probability (no more sparse):
-        prob_matrix[i][j] =  prob + (1.0-telepor_ratio)*links[i][j]/deg[i] ;
+    double prob = telepor_ratio/length;
+    if(perso_flag==0){
+      for(int i = 0; i<links.length; i++){       // N
+        for(int j = 0; j<links[0].length; j++){  // N
+          //avoid sink nodes
+          if(deg[i]==0){;}else{
+            //evaluating the transition probability (no more sparse):
+            prob_matrix[i][j] =  prob + (1.0-telepor_ratio)*links[i][j]/deg[i] ;
+          }
+        }
+      }
+    }else {
+      for(int i = 0; i<links.length; i++){       // N
+        for(int j = 0; j<links[0].length; j++){  // N
+          //avoid sink nodes
+          if(deg[i]==0){;}else{
+            //evaluating the transition probability (no more sparse):
+            prob_matrix[i][j] =  prob + (1.0-telepor_ratio)*links[i][j]/deg[i]*perso[i] ;
+          }
+        }
       }
     }
 
@@ -152,65 +150,50 @@ public class main{
   * @param  y   a sample parameter for a method
   * @return     the sum of x and y
   */
-  public static void markov(double [][] trans){
-    int n = trans[0].length;
+  public static void power(double [][] trans){
+    System.out.print("\n Computing : surfer simulation ... \n");
+    int length = trans.length;
 
-    double [] rank = new double[n];
+
+    // Use the power method to compute page ranks.
+    double[] rank = new double[length];
+    // first move
     rank[0] = 1.0;
 
-    double[] newRank = new double[n];
-    newRank[0] = 1.0;
-
-    do {
-      System.out.printf("SALUT \n");
-      rank = newRank;
-      for (int j = 0; j < n; j++) {
-        for (int i = 0; i < n; i++){
-          for (int z = 0; z < n; z++) {
-            System.out.printf("%8.5f", rank[z]);
-          }
-          newRank[j] = rank[i]*trans[i][j];
-          System.out.println( " RANK : " + rank[i] + " "+ " TRANS : " + trans[i][j]);
-          /*System.out.printf("%f", trans[0][2]);
-          System.out.printf("%f", trans[0][3]);
-          System.out.printf("%f", trans[0][4]);
-          System.out.printf("%f", trans[0][5]);
-          System.out.printf("%f", trans[1][0]);
-          System.out.printf("%f", trans[1][1]);
-          System.out.printf("%f", trans[1][2]);
-          System.out.printf("%f", trans[1][3]);
-          System.out.printf("%f", trans[1][4]);
-          System.out.printf("%f", trans[1][5]);
-          System.out.printf("%f", trans[1][6]);*/
-        }
+    int iter ;
+    for (iter = 0 ; true ; iter++) {
+      double[] tmp = new double[length];
+      for (int i = 0; i < length; i++) {
+        for (int j = 0; j < length; j++)
+        //multiply the the matrix by the vector and record the result in tmp
+        tmp[i] += trans[j][i]*rank[j];
       }
-    } while(!converge(rank, newRank));
-
-
-    // print page ranks
-    for (int i = 0; i < n; i++) {
-      System.out.printf("%8.5f", rank[i]);
-    }
-    System.out.println();
-
-    System.out.println();
-    // print page ranks
-    for (int i = 0; i < n; i++) {
-      System.out.printf("%2d  %5.3f\n", i, rank[i]);
+      // if converge or iter is too large break the loop
+      if (converge(rank,tmp) || iter == Integer.MAX_VALUE-1){
+        break;
+      }
+      rank = tmp;
     }
 
 
+    System.out.println("\n Score after " + iter + " iterations : \n");
+    // print page ranks
+    double sum = 0;
+    for (int i = 0; i < trans.length; i++) {
+      System.out.println(" " + i + " " + rank[i]);
+      sum += rank[i];
+    }
+    System.out.println("\n sum = " + sum);
   }
 
 
   /**
   * Calcule si c'est convergent
   */
-
   public static boolean converge(double [] rank, double [] newrank){
     int n = rank.length;
     for (int i = 0; i < n; i++){
-      if(rank[i] != newrank[i])
+      if(rank[i] <= newrank[i]-0.00000000000000005)
       return false;
     }
     return true;
@@ -263,8 +246,41 @@ public class main{
   * @param  y   a sample parameter for a method
   * @return     the sum of x and y
   */
+  public static double[] import_perso(String csv_file, String separator){
+    System.out.print("\n Importing : Perso vector ... \n");
+    //We use ArrayList because the size is unknown
+    ArrayList<String[]> list= new ArrayList<String[]>();
+
+    try{
+      // reading line by line the csv file (comma seperated variables)
+      BufferedReader CSVFile = new BufferedReader(new FileReader(csv_file));
+      String line = CSVFile.readLine();
+      while(line!=null){
+        list.add(line.split(separator));
+        line = CSVFile.readLine();
+      }
+    }catch(IOException e){
+      e.printStackTrace();
+    }
+    // casting to string matrix
+    String [][] string_matrix = list.toArray(new String[list.size()][]);
+    // casting to integer matrix
+    double [] vector = new double [string_matrix[0].length];
+    for (int j = 0; j < string_matrix[0].length; j++) {
+      vector[j] = Double.parseDouble(string_matrix[0][j]);
+    }
+    return vector;
+  }
+
+
+  /**
+  * An example of a method - replace this comment with your own
+  *
+  * @param  y   a sample parameter for a method
+  * @return     the sum of x and y
+  */
   public static int[][] import_csv(String csv_file, String separator){
-    System.out.print("\n Computing : transition matrix... \n");
+    System.out.print("\n Importing : CSV file ... \n");
     //We use ArrayList because the size is unknown
     ArrayList<String[]> list= new ArrayList<String[]>();
     try{
