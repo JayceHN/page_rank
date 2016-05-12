@@ -60,6 +60,7 @@ public class main{
     // determining the transition matrix
     double [][] trans = transition(page_link, degrees, 0.1, print);
 
+    markov(trans);
 
     long stopTime = System.currentTimeMillis();
     System.out.println("\n Done in : " + (stopTime-startTime) + "ms !");
@@ -110,7 +111,7 @@ public class main{
     double[][] prob_matrix = new double [links.length][links[0].length];
 
     //probabilty of jump : alpha/N
-    double prob = 1/links.length;
+    double prob = telepor_ratio/links.length;
 
     for(int i = 0; i<links.length; i++){       // N
       // *
@@ -143,6 +144,76 @@ public class main{
     //******************* $$$$$$$$$$$$$$$$$$$$$$ *****************
 
     return prob_matrix;
+  }
+
+  /**
+  * An example of a method - replace this comment with your own
+  *
+  * @param  y   a sample parameter for a method
+  * @return     the sum of x and y
+  */
+  public static void markov(double [][] trans){
+    int n = trans[0].length;
+
+    double [] rank = new double[n];
+    rank[0] = 1.0;
+
+    double[] newRank = new double[n];
+    newRank[0] = 1.0;
+
+    do {
+      System.out.printf("SALUT \n");
+      rank = newRank;
+      for (int j = 0; j < n; j++) {
+        for (int i = 0; i < n; i++){
+          for (int z = 0; z < n; z++) {
+            System.out.printf("%8.5f", rank[z]);
+          }
+          newRank[j] = rank[i]*trans[i][j];
+          System.out.println( " RANK : " + rank[i] + " "+ " TRANS : " + trans[i][j]);
+          /*System.out.printf("%f", trans[0][2]);
+          System.out.printf("%f", trans[0][3]);
+          System.out.printf("%f", trans[0][4]);
+          System.out.printf("%f", trans[0][5]);
+          System.out.printf("%f", trans[1][0]);
+          System.out.printf("%f", trans[1][1]);
+          System.out.printf("%f", trans[1][2]);
+          System.out.printf("%f", trans[1][3]);
+          System.out.printf("%f", trans[1][4]);
+          System.out.printf("%f", trans[1][5]);
+          System.out.printf("%f", trans[1][6]);*/
+        }
+      }
+    } while(!converge(rank, newRank));
+
+
+    // print page ranks
+    for (int i = 0; i < n; i++) {
+      System.out.printf("%8.5f", rank[i]);
+    }
+    System.out.println();
+
+    System.out.println();
+    // print page ranks
+    for (int i = 0; i < n; i++) {
+      System.out.printf("%2d  %5.3f\n", i, rank[i]);
+    }
+
+
+  }
+
+
+  /**
+  * Calcule si c'est convergent
+  */
+
+  public static boolean converge(double [] rank, double [] newrank){
+    int n = rank.length;
+    for (int i = 0; i < n; i++){
+      if(rank[i] != newrank[i])
+      return false;
+    }
+    return true;
   }
 
   /**
