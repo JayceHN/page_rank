@@ -52,7 +52,7 @@ public class main{
     }
 
     //import csv file as an int matrix
-    int [][] page_link = import_csv(args[0],",");
+    double [][] page_link = import_csv(args[0],",");
 
     // determining degree vector of the matrix
     int [] degrees = compute_deg(page_link,print);
@@ -78,7 +78,7 @@ public class main{
   * @param  0.0 < telepor_ratio < 1.0
   * @return     the sum of x and y
   */
-  public static double[][] transition(int[][] links, int[] deg, double telepor_ratio, double[] perso, boolean print){
+  public static double[][] transition(double[][] links, int[] deg, double telepor_ratio, double[] perso, boolean print){
     // google matrix
     System.out.print("\n Computing : transition matrix... \n");
     double[][] prob_matrix = new double [links.length][links[0].length];
@@ -97,7 +97,7 @@ public class main{
           //avoid sink nodes
           if(deg[i]==0){
             for(int k=0; k<links.length;k++){
-              links[i][k] = 1/links.length;
+              links[i][k] = (double)1/links.length;
             }
             deg[i]=1;
           }
@@ -113,7 +113,7 @@ public class main{
           //avoid sink nodes
           if(deg[i]==0){
             for(int k=0; k<links.length;k++){
-              links[i][k] = 1/links.length;
+              links[i][k] = (double)1/links.length;
             }
             deg[i]=1;
           }
@@ -179,7 +179,6 @@ public class main{
       rank = tmp;
     }
 
-    rank = normalize(rank);
     System.out.println("\n Score after " + iter + " iterations : \n");
     // print page ranks
     double sum = 0;
@@ -204,28 +203,12 @@ public class main{
   }
 
   /**
-  * Normalize
-  */
-  public static double[] normalize(double [] rank){
-    double norm = 0 ;
-    for(double x: rank){
-      norm += x*x;
-    }
-    norm = Math.sqrt(norm);
-    double [] normalized = new double[rank.length];
-    for (int i =0; i<rank.length ;i++ ) {
-      normalized[i] = rank[i]/norm;
-    }
-    return normalized;
-  }
-
-  /**
   * An example of a method - replace this comment with your own
   *
   * @param  y   a sample parameter for a method
   * @return     the sum of x and y
   */
-  public static int[] compute_deg(int[][] links, boolean print){
+  public static int[] compute_deg(double[][] links, boolean print){
     System.out.print("\n Computing : degrees vector... \n");
     // degrees are just the sum of the each lines
     int [] deg = new int [links.length];
@@ -299,7 +282,7 @@ public class main{
   * @param  y   a sample parameter for a method
   * @return     the sum of x and y
   */
-  public static int[][] import_csv(String csv_file, String separator){
+  public static double[][] import_csv(String csv_file, String separator){
     System.out.print("\n Importing : CSV file ... \n");
     //We use ArrayList because the size is unknown
     ArrayList<String[]> list= new ArrayList<String[]>();
@@ -317,10 +300,10 @@ public class main{
     // casting to string matrix
     String [][] string_matrix = list.toArray(new String[list.size()][]);
     // casting to integer matrix
-    int [][] matrix = new int[string_matrix.length][string_matrix[0].length];
+    double [][] matrix = new double[string_matrix.length][string_matrix[0].length];
     for (int i = 0; i < string_matrix.length; i++) {
       for (int j = 0; j < string_matrix[0].length; j++) {
-        matrix[i][j] = Integer.parseInt(string_matrix[i][j]);
+        matrix[i][j] = Double.parseDouble(string_matrix[i][j]);
       }
     }
     return matrix;
