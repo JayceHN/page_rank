@@ -11,7 +11,7 @@ import java.lang.Math;
 *  PageRank alogorithm
 * Inspired from [Pearson] - Algorithms, 4th ed. - [Sedgewick, Wayne]
 * @author Robin Hormaux & Guillaume Calmant
-* @version 0.9
+* @version 1.0
 */
 public class main{
 
@@ -73,10 +73,14 @@ public class main{
   }
 
   /**
-  * An example of a method - replace this comment with your own
+  * Create the transition matrix
   *
-  * @param  0.0 < telepor_ratio < 1.0
-  * @return     the sum of x and y
+  * @param  links   matrix with connected nodes
+            deg     degrees matrix same lenght than links matrix
+            0.0 < telepor_ratio < 1.0
+            perso   a personalize vector same lenght than degrees matrix
+            print   a boolean
+  * @return a double tab with 2 dimensions, corresponding to the transition matrix
   */
   public static double[][] transition(double[][] links, int[] deg, double telepor_ratio, double[] perso, boolean print){
     // google matrix
@@ -149,10 +153,10 @@ public class main{
   }
 
   /**
-  * An example of a method - replace this comment with your own
+  * Execute the power method
   *
-  * @param  y   a sample parameter for a method
-  * @return     the sum of x and y
+  * @param  trans   a transition matrix
+  * @return     return nothing but compute the Page Rank Scores
   */
   public static void power(double [][] trans){
     System.out.print("\n Computing : surfer simulation ... \n");
@@ -191,7 +195,7 @@ public class main{
 
 
   /**
-  * Calcule si c'est convergent
+  * Compute if two vectors are the sames, if yes they convege
   */
   public static boolean converge(double [] rank, double [] newrank){
     int n = rank.length;
@@ -203,10 +207,10 @@ public class main{
   }
 
   /**
-  * An example of a method - replace this comment with your own
+  * Compute degrees of a matrix
   *
-  * @param  y   a sample parameter for a method
-  * @return     the sum of x and y
+  * @param  links   a matrix with connected nodes
+  * @return a tab with the degrees of each nodes of the matrix
   */
   public static int[] compute_deg(double[][] links, boolean print){
     System.out.print("\n Computing : degrees vector... \n");
@@ -244,10 +248,10 @@ public class main{
   }
 
   /**
-  * An example of a method - replace this comment with your own
+  * Import a personalized vector
   *
-  * @param  y   a sample parameter for a method
-  * @return     the sum of x and y
+  * @param  csv_file   contaigning a matrix with connected nodes
+  * @return a double tab with the save values of the csv file
   */
   public static double[] import_perso(String csv_file, String separator){
     System.out.print("\n Importing : Perso vector ... \n");
@@ -277,10 +281,11 @@ public class main{
 
 
   /**
-  * An example of a method - replace this comment with your own
+  * Import csv files
   *
-  * @param  y   a sample parameter for a method
-  * @return     the sum of x and y
+  * @param  csv_file  cointaing a matrix with connected nodes
+            separator a string contaigning a separator for reading the matrix item by item
+  * @return a double tab with the csv file imported
   */
   public static double[][] import_csv(String csv_file, String separator){
     System.out.print("\n Importing : CSV file ... \n");
